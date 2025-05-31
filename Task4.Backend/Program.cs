@@ -1,6 +1,16 @@
-var builder = WebApplication.CreateBuilder(args);
-var app = builder.Build();
+using Microsoft.EntityFrameworkCore;
+using Task4.Backend.Persistance;
 
-app.MapGet("/", () => "Hello World!");
+var builder = WebApplication.CreateBuilder(args);
+var configuration = builder.Configuration;
+
+builder.Services.AddDbContext<AppDbContext>(
+    options =>
+    {
+        options.UseSqlServer(configuration.GetConnectionString(nameof(AppDbContext)));
+    }
+);
+
+var app = builder.Build();
 
 app.Run();
