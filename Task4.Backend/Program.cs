@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Task4.Backend.Middleware;
 using Task4.Backend.Persistance;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,5 +13,8 @@ builder.Services.AddDbContext<AppDbContext>(
 );
 
 var app = builder.Build();
+
+app.UseMiddleware<ExceptionHandlerMiddleware>();
+
 
 app.Run();
