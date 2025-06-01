@@ -6,16 +6,30 @@ using Task4.Backend.Mappings;
 
 namespace Task4.Backend.Services;
 
-public class UserService(IUserRepository repository) : IUserService
+public class UserService(IUserRepository repository, IJwtService jwtService) : IUserService
 {
-    public async Task Registration(RegistrationUserDto registrationUser)
+    public async Task<AuthorizationDto> Registration(RegistrationUserDto registrationUser)
     {
-        await repository.Registration(UserMapping.MapFromRegistrationDto(registrationUser));
+        var user = await repository.Registration(UserMapping.MapFromRegistrationDto(registrationUser));
+        var token = jwtService.GenerateJwtToken(user);
+
+        return new AuthorizationDto
+        {
+            UserId = user.Id,
+            Token = token
+        };
     }
 
-    public async Task Login(LoginUserDto loginUser)
+    public async Task<AuthorizationDto> Login(LoginUserDto loginUser)
     {
-        await repository.Login(loginUser.Email, loginUser.Password);
+        var user = await repository.Login(loginUser.Email, loginUser.Password);
+        var token = jwtService.GenerateJwtToken(user);
+
+        return new AuthorizationDto
+        {
+            UserId = user.Id,
+            Token = token
+        };
     }
 
     public async Task<List<GetUserDto>> GetUsersWithoutYou(uint id)

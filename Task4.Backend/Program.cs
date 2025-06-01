@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Task4.Backend.Interfaces.Repositories;
 using Task4.Backend.Interfaces.Services;
+using Task4.Backend.JwtTokens;
 using Task4.Backend.Middleware;
 using Task4.Backend.Persistance;
 using Task4.Backend.Persistance.Repositories;
@@ -8,6 +9,16 @@ using Task4.Backend.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
+
+builder.Services.Configure<AuthSettings>(configuration.GetSection("AuthSettings"));
+builder.Services.AddScoped<IJwtService, JwtService>();
+builder.Services.AddJwtTokens(configuration);
+
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("ActiveOnly", policy => 
+        policy.RequireClaim("status", "Active"));
+});
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -29,6 +40,9 @@ app.UseMiddleware<ExceptionHandlerMiddleware>();
 
 app.UseSwagger();
 app.UseSwaggerUI();
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapControllers();
 

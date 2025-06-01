@@ -7,7 +7,7 @@ namespace Task4.Backend.Persistance.Repositories;
 
 public class UserRepository(AppDbContext context) : IUserRepository
 {
-    public async Task Registration(User newUser)
+    public async Task<User> Registration(User newUser)
     {
         var user = await context.Users
             .AsNoTracking()
@@ -16,11 +16,13 @@ public class UserRepository(AppDbContext context) : IUserRepository
         if(user != null)
             throw new InvalidOperationException("User already exists");
         
-        await context.Users.AddAsync(newUser);
+        var addedUser = await context.Users.AddAsync(newUser);
         await context.SaveChangesAsync();
+        
+        return addedUser.Entity;
     }
 
-    public async Task Login(string email, string password)
+    public async Task<User> Login(string email, string password)
     {
         var user = await context.Users
             .AsNoTracking()
@@ -31,6 +33,8 @@ public class UserRepository(AppDbContext context) : IUserRepository
         
         if(!BCrypt.Net.BCrypt.Verify(password, user.PasswordHash))
             throw new Exception("Wrong password");
+
+        return user;
     }
 
     public async Task<List<User>> GetUsersWithoutYou(uint id)
