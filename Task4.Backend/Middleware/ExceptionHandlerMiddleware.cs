@@ -34,7 +34,7 @@ public class ExceptionHandlerMiddleware(RequestDelegate next)
 
             case InvalidDataException validationEx:
                 statusCode = StatusCodes.Status400BadRequest;
-                message = "Invalid input data.";
+                message = "Already added.";
                 detailed = validationEx.Message;
                 break;
             
