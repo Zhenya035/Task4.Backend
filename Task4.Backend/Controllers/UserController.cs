@@ -11,7 +11,7 @@ namespace Task4.Backend.Controllers;
 public class UserController(IUserService userService) : ControllerBase
 {
     [HttpPost("registration")]
-    public async Task<IActionResult> Registration([FromBody] RegistrationUserDto registrationUser)
+    public async Task<ActionResult<AuthorizationDto>> Registration([FromBody] RegistrationUserDto registrationUser)
     {
         var response = await userService.Registration(registrationUser);
         
