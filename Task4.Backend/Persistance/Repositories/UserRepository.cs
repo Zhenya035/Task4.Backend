@@ -86,4 +86,19 @@ public class UserRepository(AppDbContext context) : IUserRepository
             .ExecuteUpdateAsync(u => u
                 .SetProperty(u => u.Status, StatusEnum.Active));
     }
+
+    public async Task UpdateLastLogin(uint userId)
+    {
+        var user = context.Users
+            .AsNoTracking()
+            .FirstOrDefault(u => u.Id == userId);
+        
+        if(user == null)
+            throw new KeyNotFoundException("User not found");
+        var time = DateTime.Now;
+        await context.Users
+            .Where(u => u.Id == userId)
+            .ExecuteUpdateAsync(u => u
+                .SetProperty(u => u.LastLogin, time));
+    }
 }

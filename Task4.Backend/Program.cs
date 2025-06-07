@@ -41,6 +41,12 @@ app.UseMiddleware<ExceptionHandlerMiddleware>();
 app.UseSwagger();
 app.UseSwaggerUI();
 
+app.UseCors(policy => policy
+    .WithOrigins("http://localhost:5173")
+    .AllowAnyMethod()
+    .AllowAnyHeader()
+    .AllowCredentials());
+
 app.UseAuthentication();
 app.UseAuthorization();
 

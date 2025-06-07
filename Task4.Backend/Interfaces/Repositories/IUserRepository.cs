@@ -10,4 +10,5 @@ public interface IUserRepository
     public Task Delete(List<uint> users);
     public Task Block(List<uint> users);
     public Task UnBlock(List<uint> users);
+    public Task UpdateLastLogin(uint userId);
 }

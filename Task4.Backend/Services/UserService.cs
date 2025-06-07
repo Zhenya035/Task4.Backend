@@ -12,6 +12,7 @@ public class UserService(IUserRepository repository, IJwtService jwtService) : I
     {
         var user = await repository.Registration(UserMapping.MapFromRegistrationDto(registrationUser));
         var token = jwtService.GenerateJwtToken(user);
+        await UpdateLastLogin(user.Id);
 
         return new AuthorizationDto
         {
@@ -25,6 +26,8 @@ public class UserService(IUserRepository repository, IJwtService jwtService) : I
         var user = await repository.Login(loginUser.Email, loginUser.Password);
         var token = jwtService.GenerateJwtToken(user);
 
+        await UpdateLastLogin(user.Id);
+        
         return new AuthorizationDto
         {
             UserId = user.Id,
@@ -61,5 +64,10 @@ public class UserService(IUserRepository repository, IJwtService jwtService) : I
             throw new ArgumentException("Users cannot be empty");
         
         await repository.UnBlock(users);
+    }
+
+    public async Task UpdateLastLogin(uint userId)
+    {
+        await repository.UpdateLastLogin(userId);
     }
 }
