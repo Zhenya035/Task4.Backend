@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Task4.Backend.Interfaces.Repositories;
 using Task4.Backend.Interfaces.Services;
@@ -10,14 +11,17 @@ using Task4.Backend.Services;
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
 
+builder.Services.AddHttpContextAccessor();
+
 builder.Services.Configure<AuthSettings>(configuration.GetSection("AuthSettings"));
 builder.Services.AddScoped<IJwtService, JwtService>();
 builder.Services.AddJwtTokens(configuration);
 
+builder.Services.AddScoped<IAuthorizationHandler, ActiveUserHandler>();
 builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("ActiveOnly", policy => 
-        policy.RequireClaim("status", "Active"));
+        policy.AddRequirements(new ActiveUserRequirement()));
 });
 
 builder.Services.AddEndpointsApiExplorer();
