@@ -42,6 +42,7 @@ public class UserRepository(AppDbContext context) : IUserRepository
         return await context.Users
             .AsNoTracking()
             .Where(u => u.Id != id)
+            .OrderByDescending(u => u.LastLogin)
             .ToListAsync();
     }
 
