@@ -10,6 +10,6 @@ public class User
     public string PasswordHash { get; set; } = string.Empty;
     public DateTime? LastLogin { get; set; }
     public StatusEnum Status { get; set; } = StatusEnum.Active;
-    public DateTime CreatedAt { get; set; } = DateTime.Now;
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
 }
