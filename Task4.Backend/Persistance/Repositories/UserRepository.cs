@@ -96,7 +96,7 @@ public class UserRepository(AppDbContext context) : IUserRepository
         
         if(user == null)
             throw new KeyNotFoundException("User not found");
-        var time = DateTime.Now;
+        var time = DateTime.UtcNow;
         await context.Users
             .Where(u => u.Id == userId)
             .ExecuteUpdateAsync(u => u
