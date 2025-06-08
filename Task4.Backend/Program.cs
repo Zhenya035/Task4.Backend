@@ -46,7 +46,7 @@ app.UseSwagger();
 app.UseSwaggerUI();
 
 app.UseCors(policy => policy
-    .WithOrigins("http://localhost:5173")
+    .WithOrigins("http://localhost:5173", "https://task4-frontend-gray.vercel.app")
     .AllowAnyMethod()
     .AllowAnyHeader()
     .AllowCredentials());
